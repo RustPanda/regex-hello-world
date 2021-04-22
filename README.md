@@ -1,3 +1,3 @@
-# regexHelloWolrd
+# regex-hello-world
 Перебебраем подстроки завернутые в двойтые фигурные скобки
 ### Hello {{ my }} world
