@@ -1,4 +1,4 @@
-use regex::Regex;
+use regex::{Captures, Regex};
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -6,12 +6,20 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let regex = Regex::new(r"\{{2}\s*(.*?)\s*\}{2}")?;
 
-    regex.captures_iter("Hello {{my}} world. {{ item in items }} {{ ddd }}").for_each(|caputers|{
-        dbg!(&caputers[1]);
-        // [src/main.rs:10] &caputers[1] = "my"
-        // [src/main.rs:10] &caputers[1] = "item in items"
-        // [src/main.rs:10] &caputers[1] = "ddd"       
+    let template = "Hello {{my}} world. {{ item in items }} {{ ddd }}";
+    regex.captures_iter(&template).for_each(|caputers|{
+        dbg!(&caputers[0]);     
+        //&caputers[0] = "{{my}}"
+        //&caputers[0] = "{{ Item in items }}"
+        //&caputers[0] = "{{ ddd }}"
     });
  
+    let template = regex.replace_all(template, |caps: &Captures| {
+        format!("{}", &caps[1])
+    });
+
+    dbg!(template);
+    //template = "Hello my world. Item in items ddd"
+
     Ok(())
 }
